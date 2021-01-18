@@ -6812,7 +6812,12 @@ class Form extends CI_Controller {
                 }
             }
             //array parameters : action, description, before, after, app_id, app_name, form_id, form_name
-            $logary = array('action' => 'update', 'description' => 'Edit table field name', 'form_id' => $form_id, 'before' => $old_field_name, 'after' => $new_field_name);
+            $logary = array('action' => 'update',
+                            'description' => 'Edit table field name', 
+                            'form_id' => $form_id, 
+                            'before' => $old_field_name, 
+                            'after' => $new_field_name
+                        );
             addlog($logary);
         }
         $jsone_array = array('status' => true);
@@ -6827,7 +6832,10 @@ class Form extends CI_Controller {
     public function get_district_wise_d_center() {
         $app_id = $this->input->post('app_id');
         $district = $this->input->post('district');
-        $dc_list = $this->form_results_model->get_d_center_district_wise($app_id, $district);
+        $dc_list = $this->form_results_model->get_d_center_district_wise(
+                                                $app_id,
+                                                $district
+                                            );
         header('Content-Type: application/x-json; charset=utf-8');
         echo json_encode($dc_list);
         exit();
@@ -6839,7 +6847,8 @@ class Form extends CI_Controller {
     public function get_form_based_category_values() {
         $form_id = $this->input->post('form_id');
         $filter_attribute = $this->form_model->get_form_filters_only($form_id);
-        $app_id = $this->db->query("select app_id from form where id=$form_id")->result_array();
+        $app_id = $this->db->query(
+            "select app_id from form where id=$form_id")->result_array();
         $app_id = $app_id[0]['app_id'];
         $settings = get_result_view_settings($app_id);
         $category_final = array('' => 'Select One');
@@ -6848,11 +6857,16 @@ class Form extends CI_Controller {
         $possible_filters = $settings->filters->$form_id;
         if ($possible_filters) {
             foreach ($possible_filters as $category) {
-                $category_final = array_merge($category_final, array($category => str_replace('_', ' ', $category)));
+                $category_final = array_merge($category_final,
+                                    array($category => str_replace('_', ' ', $category)
+                                    )
+                                );
             }
         }
         $filter = $filter_attribute['filter'];
-        $sub_cat_list = $this->form_results_model->get_category_values('zform_' . $form_id, $filter);
+        $sub_cat_list = $this->form_results_model->get_category_values(
+                                        'zform_' . $form_id, $filter
+                                    );
         if ($sub_cat_list) {
             foreach ($sub_cat_list as $cat) {
                 $sub_final = array_merge($sub_final, array($cat[$filter] => $cat[$filter]));
