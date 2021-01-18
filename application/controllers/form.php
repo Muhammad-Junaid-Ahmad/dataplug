@@ -6750,8 +6750,11 @@ class Form extends CI_Controller {
                         exit();
 
                     }
-                    else if ($this->form_results_model->check_column_exits('zform_' . $form_id, $new_field_name)) {
-                        $jsone_array = array('status' => false, 'field_name' => $old_field_name,'message' => 'Column exist in table already');
+                    else if ($this->form_results_model->check_column_exits(
+                                        'zform_' . $form_id, $new_field_name)) {
+                        $jsone_array = array('status' => false,
+                                             'field_name' => $old_field_name,
+                                             'message' => 'Column exist in table already');
                         echo json_encode($jsone_array);
                         exit();
                     }
@@ -6775,9 +6778,15 @@ class Form extends CI_Controller {
                         'NULL' => TRUE
                     ),
                 );
-                $this->dbforge->modify_column('zform_' . $form_id . '_' . $sub_table_name, $fields);
+                $this->dbforge->modify_column(
+                            'zform_' . $form_id . '_' . $sub_table_name, 
+                            $fields
+                        );
             } else {
-                $column_info = $this->form_results_model->check_column_exits('zform_' . $form_id, $old_field_name);
+                $column_info = $this->form_results_model->check_column_exits(
+                                        'zform_' . $form_id, 
+                                        $old_field_name
+                                    );
                 if ($column_info['DATA_TYPE'] == 'varchar') {
                     $fields = array(
                         $old_field_name => array(
@@ -6807,11 +6816,13 @@ class Form extends CI_Controller {
                     $table_name = 'zform_' . $form_id . '_' . $old_field_name;
                     //$table_exist = $this->form_results_model->check_table_exits($table_name);
                     if (is_table_exist($table_name)) {
-                        $this->dbforge->rename_table('zform_' . $form_id . '_' . $old_field_name, 'zform_' . $form_id . '_' . $new_field_name);
+                        $this->dbforge->rename_table('zform_' . $form_id . '_' . $old_field_name,
+                                                     'zform_' . $form_id . '_' . $new_field_name);
                     }
                 }
             }
-            //array parameters : action, description, before, after, app_id, app_name, form_id, form_name
+            //array parameters : action, description, before, after,
+            //                   app_id, app_name, form_id, form_name
             $logary = array('action' => 'update',
                             'description' => 'Edit table field name', 
                             'form_id' => $form_id, 
