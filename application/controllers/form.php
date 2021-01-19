@@ -6516,7 +6516,9 @@ class Form extends CI_Controller {
                 }
             }
         }
-        $table_headers_array = array_merge($table_headers_array, array('created_datetime'));
+        $table_headers_array = array_merge($table_headers_array,
+                                           array('created_datetime')
+                                        );
 
         $table_headers_array = array_merge($table_headers_array, array('town'));
         $table_headers_array = array_merge($table_headers_array, array('actions'));
@@ -6542,7 +6544,11 @@ class Form extends CI_Controller {
         );
         $this->db->where('id', $form_id);
         $this->db->update('form', $dataform);
-        $this->session->set_flashdata('validate', array('message' => 'Form filter updated successfully.', 'type' => 'success'));
+        $this->session->set_flashdata(
+                            'validate', 
+                            array('message' => 'Form filter updated successfully.',
+                            'type' => 'success')
+                        );
         if ($this->input->post('redirect_to') == 'form_result') {
             redirect(base_url() . 'application-results/' . $app_id);
         } else if ($this->input->post('redirect_to') == 'mapview') {
@@ -6565,7 +6571,9 @@ class Form extends CI_Controller {
         foreach ($all_forms as $forms) {
             $form_id = $forms['id'];
             $table_name = 'zform_' . $form_id;
-            $schema_list = $this->form_results_model->getTableHeadingsFromSchema($table_name);
+            $schema_list = $this->form_results_model->getTableHeadingsFromSchema(
+                                                                        $table_name
+                                                                    );
             foreach ($schema_list as $key => $value) {
                 $header_value = $value['COLUMN_NAME'];
                 if ($header_value == $filter) {
@@ -6594,7 +6602,9 @@ class Form extends CI_Controller {
         foreach ($all_forms as $forms) {
             $form_id = $forms['id'];
             $table_name = 'zform_' . $form_id;
-            $schema_list = $this->form_results_model->getTableHeadingsFromSchema($table_name);
+            $schema_list = $this->form_results_model->getTableHeadingsFromSchema(
+                                                                    $table_name
+                                                                    );
             foreach ($schema_list as $key => $value) {
                 $header_value = $value['COLUMN_NAME'];
                 if ($header_value == $filter) {
@@ -6640,11 +6650,14 @@ class Form extends CI_Controller {
         $forms_list = array();
         $all_forms = $this->form_model->get_form_by_app($app_id);
         foreach ($all_forms as $forms) {
-            $forms_list[] = array('form_id' => $forms['form_id'], 'form_name' => $forms['form_name']);
+            $forms_list[] = array('form_id' => $forms['form_id'],
+                                  'form_name' => $forms['form_name']);
         }
         /** multi form ends herer..... */
         $record_array_final_filter = array();
-        $results_filer = $this->form_results_model->get_form_results_filters($forms_list);
+        $results_filer = $this->form_results_model->get_form_results_filters(
+                                                                $forms_list
+                                                            );
         $app_filters_array = array();
         foreach ($results_filer as $k => $v) {
             $result_json = $v['record'];
@@ -6708,7 +6721,8 @@ class Form extends CI_Controller {
         $settings = get_app_general_settings($app_id);
         $settings->screen_view = $screen_size;
         $setting_json = json_encode($settings);
-        $this->db->query("update app_settings set filters='$setting_json' where setting_type='GENERAL_SETTINGS' AND app_id='$app_id'");
+        $this->db->query("update app_settings set filters='$setting_json' ".
+                         "where setting_type='GENERAL_SETTINGS' AND app_id='$app_id'");
 //        $this->db->update('app_settings', $app_settings);
     }
 
@@ -6736,8 +6750,12 @@ class Form extends CI_Controller {
             $description = $this->input->post('form_str');
             if ($old_field_name != $new_field_name) {
                 if ($sub_table_name != '') {
-                    if ($this->form_results_model->check_column_exits('zform_' . $form_id . '_' . $sub_table_name, $new_field_name)) {
-                        $jsone_array = array('status' => false, 'field_name' => $old_field_name,'message' => 'Column exist in sub table already');
+                    if ($this->form_results_model->check_column_exits(
+                                'zform_' . $form_id . '_' . $sub_table_name, 
+                                 $new_field_name)) {
+                        $jsone_array = array('status' => false,
+                                             'field_name' => $old_field_name,
+                                             'message' => 'Column exist in sub table already');
                         echo json_encode($jsone_array);
                         exit();
                     }
