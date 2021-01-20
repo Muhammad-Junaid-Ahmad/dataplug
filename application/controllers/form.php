@@ -6299,7 +6299,9 @@ class Form extends CI_Controller {
                     $data['selected_date_from'] = "";
                 }
                 $array_final = array();
-                $array_final = $this->get_heading_n_data_export($forms_list, $to_date, $from_date);
+                $array_final = $this->get_heading_n_data_export($forms_list, 
+                                                                $to_date, 
+                                                                $from_date);
                 $data['headings'] = $array_final['headings'];
                 $data['form'] = $array_final['form'];
                 $headings = $data['headings'];
@@ -6333,7 +6335,8 @@ class Form extends CI_Controller {
                                 $value = '"' . $multi_image_str . '"' . ",";
                             } else {
                                 $value = str_replace('"', '""', $form[$headings[$i]]);
-                                $value = '"' . $value . '"' . ","; //if you change the separator before, change this ";" too
+                                //if you change the separator before, change this ";" too
+                                $value = '"' . $value . '"' . ","; 
                             }
                             $line .= $value;
                         } //end foreach
@@ -6387,7 +6390,9 @@ class Form extends CI_Controller {
         $forms_list = array();
         $all_forms = $this->form_model->get_form_by_app($slug);
         foreach ($all_forms as $forms) {
-            $forms_list[] = array('form_id' => $forms['form_id'], 'table_name' => 'zform_' . $forms['form_id'], 'form_name' => $forms['form_name']);
+            $forms_list[] = array('form_id' => $forms['form_id'], 
+                                  'table_name' => 'zform_' . $forms['form_id'], 
+                                  'form_name' => $forms['form_name']);
         }
         $to_date = '';
         $from_date = '';
@@ -6402,7 +6407,9 @@ class Form extends CI_Controller {
         }
 
         $array_final = array();
-        $array_final = $this->get_heading_n_data_export($forms_list, $to_date, $from_date);
+        $array_final = $this->get_heading_n_data_export($forms_list, 
+                                                        $to_date, 
+                                                        $from_date);
         $data['headings'] = $array_final['headings'];
         $data['form'] = $array_final['form'];
         $headings = $data['headings'];
@@ -6436,7 +6443,8 @@ class Form extends CI_Controller {
                         $value = '"' . $multi_image_str . '"' . ",";
                     } else {
                         $value = str_replace('"', '""', $form[$headings[$i]]);
-                        $value = '"' . $value . '"' . ","; //if you change the separator before, change this ";" too
+                        //if you change the separator before, change this ";" too
+                        $value = '"' . $value . '"' . ","; 
                     }
                     $line .= $value;
                 } //end foreach
@@ -6468,13 +6476,24 @@ class Form extends CI_Controller {
         $table_headers_array = array();
         $record_array_final = array();
         $heading_query = array();
-        $exclude_array = array('id', 'remote_id', 'uc_name', 'town_name', 'form_id', 'img1', 'img2', 'img3', 'img4', 'img5', 'img1_title', 'img2_title', 'img3_title', 'img4_title', 'img5_title', 'is_deleted');
+        $exclude_array = array('id', 'remote_id', 'uc_name', 'town_name', 
+                               'form_id', 'img1', 'img2', 'img3', 'img4', 
+                               'img5', 'img1_title', 'img2_title', 'img3_title', 
+                               'img4_title', 'img5_title', 'is_deleted');
         foreach ($forms_list as $form_entity) {
             $table_name = $form_entity['table_name'];
-            $results = $this->form_results_model->get_results_for_export($table_name, $to_date, $from_date, $app_id);
+            $results = $this->form_results_model->get_results_for_export(
+                                        $table_name, 
+                                        $to_date, 
+                                        $from_date, 
+                                        $app_id
+                                    );
             foreach ($results as $k => $v) {
                 $record_array = array();
-                $imagess = $this->form_results_model->getResultsImages($v['id'], $v['form_id']);
+                $imagess = $this->form_results_model->getResultsImages(
+                                        $v['id'],
+                                        $v['form_id']
+                                    );
                 if ($imagess) {
                     if (!in_array('image', $table_headers_array)) {
                         $table_headers_array = array_merge($table_headers_array, array('image'));
@@ -6489,10 +6508,16 @@ class Form extends CI_Controller {
                     }
                 }
                 $record_array = array_merge($record_array, array('form_id' => $v['form_id']));
-                $record_array = array_merge($record_array, array('created_datetime' => $v['created_datetime'], 'actions' => $v['id']));
+                $record_array = array_merge(
+                                    $record_array, 
+                                    array('created_datetime' => $v['created_datetime'],
+                                    'actions' => $v['id'])
+                                    );
                 $record_array_final[] = $record_array;
             }
-            $schema_list = $this->form_results_model->getTableHeadingsFromSchema($table_name);
+            $schema_list = $this->form_results_model->getTableHeadingsFromSchema(
+                                        $table_name
+                                    );
             $heading_query = array_merge($heading_query, $schema_list);
         }
         $send = array();
